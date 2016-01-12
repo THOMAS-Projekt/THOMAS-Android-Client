@@ -12,6 +12,8 @@ import java.util.UUID;
 import de.waishon.thomas.de.waishon.thomas.WebSocket.Arguments;
 import de.waishon.thomas.de.waishon.thomas.WebSocket.ConnectionHandler;
 import de.waishon.thomas.de.waishon.thomas.WebSocket.MethodBuilder;
+import de.waishon.thomas.listeners.MethodResponseListener;
+import de.waishon.thomas.listeners.SignalListener;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -22,6 +24,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        // TestCode zur implementierung
         Arguments args = new Arguments();
         args.addArg("motor", "left");
         args.addArg("speed", 255);
@@ -29,6 +32,7 @@ public class MainActivity extends AppCompatActivity {
         final MethodBuilder builder = new MethodBuilder();
         builder.setMethodName("setMotorSpeed");
         builder.setArgs(args);
+
 
         try {
             final ConnectionHandler handler = new ConnectionHandler("192.168.3.12");
@@ -41,6 +45,8 @@ public class MainActivity extends AppCompatActivity {
                     Log.i(TAG, builder.getJSON());
                 }
             }, 2000);
+
+
         } catch (URISyntaxException e) {
             e.printStackTrace();
         }
