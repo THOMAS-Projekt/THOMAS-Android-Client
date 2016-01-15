@@ -11,7 +11,7 @@
 # Generated files
 bin/
 gen/
-.idea/
+!/.gitignore
 
 # Gradle files
 .gradle/
