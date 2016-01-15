@@ -1,14 +1,8 @@
 package de.waishon.thomas.Sensors;
 
-import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.InputDevice;
 import android.view.MotionEvent;
-import android.view.View;
 
-import java.util.Arrays;
-
-import de.waishon.thomas.MainActivity;
 import de.waishon.thomas.WebSocket.MethodHandler;
 
 /**
@@ -44,8 +38,8 @@ public class Joystick implements JoystickEventListener{
         int[] speeds = new int[2];
 
         if(axisSum <= MAX_AXIS_VALUE) {
-            speeds[0] = -(int) (-valueX + valueY);
-            speeds[1] = -(int)(valueX + valueY);
+            speeds[0] = -(-valueX + valueY);
+            speeds[1] = -(valueX + valueY);
         } else {
             speeds[0] = -(int) (((double) MAX_MOTOR_SPEED / axisSum) * (-valueX + valueY));
             speeds[1] = -(int) (((double) MAX_MOTOR_SPEED / axisSum) * (valueX + valueY));

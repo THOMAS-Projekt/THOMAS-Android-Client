@@ -1,25 +1,19 @@
 package de.waishon.thomas;
 
-import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.InputDevice;
 import android.view.Menu;
 import android.view.MotionEvent;
-import android.view.View;
-import android.widget.Toast;
 
 import java.net.URISyntaxException;
 
 import de.waishon.thomas.Sensors.Joystick;
-import de.waishon.thomas.WebSocket.Arguments;
 import de.waishon.thomas.WebSocket.ConnectionHandler;
-import de.waishon.thomas.WebSocket.MethodBuilder;
 import de.waishon.thomas.WebSocket.MethodHandler;
 
 
-public class MainActivity extends AppCompatActivity {
+public class ThomasActivity extends AppCompatActivity {
 
     public static final String TAG = "THOMAS";
     private Joystick joystick;
@@ -29,8 +23,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-
+        setContentView(R.layout.activity_thomas);
 
         try {
             connectionHandler = new ConnectionHandler("192.168.3.12");
