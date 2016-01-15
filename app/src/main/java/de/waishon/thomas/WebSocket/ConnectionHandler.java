@@ -1,5 +1,7 @@
 package de.waishon.thomas.WebSocket;
 
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 
 import org.java_websocket.client.WebSocketClient;
@@ -46,17 +48,27 @@ public class ConnectionHandler extends WebSocketClient {
     @Override
     public void onMessage(String message) {
         try {
-            JSONObject root = new JSONObject(message);
+            final JSONObject root = new JSONObject(message);
 
-            switch (root.getString("action")) {
-                case "methodResponse":
-                    handleMethodResponse(root);
-                    break;
+            new Handler(Looper.getMainLooper()).post(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        switch (root.getString("action")) {
+                            case "methodResponse":
+                                handleMethodResponse(root);
+                                break;
 
-                case "signalCalled":
-                    handleSignal(root);
-                    break;
-            }
+                            case "signalCalled":
+                                handleSignal(root);
+                                break;
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+
 
         } catch (JSONException e) {
             e.printStackTrace();
@@ -93,6 +105,8 @@ public class ConnectionHandler extends WebSocketClient {
                     paramTypes = method.getParameterTypes();
                 }
             }
+
+            Log.i(ThomasActivity.TAG, methodName);
 
             try {
                 Method method = SignalListener.class.getMethod(methodName, paramTypes);

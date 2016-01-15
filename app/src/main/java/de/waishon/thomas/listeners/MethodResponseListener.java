@@ -11,9 +11,12 @@ public interface MethodResponseListener {
     void setRelayResponse(boolean success);
     void startCameraStreamResponse(int streamID);
     void stopStreamReponseResponse(boolean success);
-    void setCameraStreamOptionsReponse(boolean success);
+
+    void setCameraStreamOptionsResponse(boolean success);
     void startNewScanResponse(int mapID);
     void stopScanResponse(boolean success);
     void forceTelemetryUpdateResponse(boolean success);
     void setAutomationStateResponse(boolean success);
+
+    void cameraStreamRegistredResponse(int streamID);
 }
