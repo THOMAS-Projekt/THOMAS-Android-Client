@@ -4,54 +4,46 @@ import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.InputDevice;
 import android.view.Menu;
+import android.view.MotionEvent;
+import android.view.View;
+import android.widget.Toast;
 
 import java.net.URISyntaxException;
-import java.util.UUID;
 
-import de.waishon.thomas.de.waishon.thomas.WebSocket.Arguments;
-import de.waishon.thomas.de.waishon.thomas.WebSocket.ConnectionHandler;
-import de.waishon.thomas.de.waishon.thomas.WebSocket.MethodBuilder;
-import de.waishon.thomas.listeners.MethodResponseListener;
-import de.waishon.thomas.listeners.SignalListener;
+import de.waishon.thomas.Sensors.Joystick;
+import de.waishon.thomas.WebSocket.Arguments;
+import de.waishon.thomas.WebSocket.ConnectionHandler;
+import de.waishon.thomas.WebSocket.MethodBuilder;
+import de.waishon.thomas.WebSocket.MethodHandler;
+
 
 public class MainActivity extends AppCompatActivity {
 
     public static final String TAG = "THOMAS";
+    private Joystick joystick;
+    private MethodHandler methodHandler;
+    private ConnectionHandler connectionHandler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // TestCode zur implementierung
-        Arguments args = new Arguments();
-        args.addArg("motor", "left");
-        args.addArg("speed", 255);
-
-        final MethodBuilder builder = new MethodBuilder();
-        builder.setMethodName("setMotorSpeed");
-        builder.setArgs(args);
-
 
         try {
-            final ConnectionHandler handler = new ConnectionHandler("192.168.3.12");
-            handler.connect();
+            connectionHandler = new ConnectionHandler("192.168.3.12");
+            connectionHandler.connect();
 
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    handler.send(builder.getJSON());
-                    Log.i(TAG, builder.getJSON());
-                }
-            }, 2000);
+            methodHandler = new MethodHandler(connectionHandler);
 
+            this.joystick = new Joystick(methodHandler);
 
         } catch (URISyntaxException e) {
             e.printStackTrace();
         }
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -59,4 +51,16 @@ public class MainActivity extends AppCompatActivity {
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
+
+    @Override
+    public boolean dispatchGenericMotionEvent(MotionEvent e) {
+        if ((e.getSource() & InputDevice.SOURCE_JOYSTICK) != InputDevice.SOURCE_JOYSTICK || e.getAction() != MotionEvent.ACTION_MOVE) {
+            return super.dispatchGenericMotionEvent(e);
+        }
+
+        joystick.onJoystickChange(e);
+
+        return true;
+    }
+
 }
